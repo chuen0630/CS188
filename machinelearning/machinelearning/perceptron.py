@@ -18,6 +18,7 @@ class Perceptron(object):
         self.get_data_and_monitor = backend.make_get_data_and_monitor_perceptron()
 
         "*** YOUR CODE HERE ***"
+        self.weights = np.zeros(dimensions)
 
     def get_weights(self):
         """
@@ -29,6 +30,7 @@ class Perceptron(object):
             `dimensions` parameter passed to Perceptron.__init__
         """
         "*** YOUR CODE HERE ***"
+        return self.weights
 
     def predict(self, x):
         """
@@ -39,6 +41,10 @@ class Perceptron(object):
         Returns: 1 or -1
         """
         "*** YOUR CODE HERE ***"
+        dot = self.weights.dot(x)
+        if dot >= 0:
+            return 1
+        return -1
 
     def update(self, x, y):
         """
@@ -53,6 +59,14 @@ class Perceptron(object):
             True if the perceptron weights have changed, False otherwise
         """
         "*** YOUR CODE HERE ***"
+        prediction = self.predict(x)
+        if prediction == y:
+            return False
+        else:
+            for i in range(len(self.weights)):
+                self.weights[i] += y * x[i]
+            return True
+
 
     def train(self):
         """
@@ -70,3 +84,10 @@ class Perceptron(object):
         graphics in between yielding data points.
         """
         "*** YOUR CODE HERE ***"
+        convergence = False
+        while (not convergence):
+            updated = False
+            for x, y in self.get_data_and_monitor(self):
+                if self.update(x,y):
+                    updated = True
+            convergence = not updated
